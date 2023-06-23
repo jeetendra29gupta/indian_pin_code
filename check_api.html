@@ -1,0 +1,15 @@
+<script>
+    const check_post_api = async () => {
+        console.log("Hi");
+        try {
+            let pin_input = 110016
+            const url = `https://api.postalpincode.in/pincode/${pin_input}`;
+            const response = await fetch(url);
+            console.log(response.status)
+
+        } catch (error) {
+            console.error(`Error ==> ${error}`)
+        }
+    };
+    check_post_api();
+</script>

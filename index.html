@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="image/png" href="./images/favicon.png">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <title>PIN code</title>
+</head>
+
+<body class="w3-container w3-sand">
+  <header class="w3-container w3-panel w3-round w3-teal">
+    <h1 class="w3-display-container"><img src="./images/amala-earth.jpg" alt="Amala Earth" width="100" height="100"
+        class="w3-circle w3-border w3-card w3-image">
+      <span>Amala Earth</span>
+      <span class="w3-display-right w3-large" id="date-time">Date Time</span>
+    </h1>
+  </header>
+
+  <input class="w3-input w3-border w3-light-grey w3-card w3-round w3-auto w3-center w3-section" type="text"
+    style="width:50%" placeholder="Enter Pin Code" id="pin_input_box" minlength="6" maxlength="6">
+  <div id="my-form-div" class="w3-container w3-section">
+
+  </div>
+</body>
+<script>
+  setInterval(date_time, 1000);
+  function date_time() {
+    let parent = document.getElementById("date-time");
+    parent.innerHTML = "";
+    var now = new Date();
+    parent.innerHTML = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
+  }
+</script>
+<script>
+  var pin_input_box = document.getElementById("pin_input_box");
+  pin_input_box.addEventListener('keyup', show_content);
+  async function show_content() {
+    let parent = document.getElementById("my-form-div");
+    parent.innerHTML = "";
+    let pin_input = pin_input_box.value;
+    if (pin_input.length == 6) {
+      if (!isNaN(pin_input)) {
+        const url = `https://api.postalpincode.in/pincode/${pin_input}`;
+        const response = await fetch(url);
+        // check promise error. 
+        const data = await response.json();
+        data.forEach(function (item, index) {
+          if (item.Status == "Success") {
+            let post_api_value = item.PostOffice;
+            post_api_value.forEach(function (item, index) {
+              if (item.DeliveryStatus === "Delivery") {
+                parent.innerHTML = `
+                <div class="w3-row-padding">
+                  <div class="w3-half w3-section">
+                    <label>City Name</label>
+                      <input class="w3-input w3-border w3-round" type="text" placeholder="City Name" value="${item.Name}" readonly>
+                  </div>
+                  <div class="w3-half w3-section">
+                    <label>District</label>
+                    <input class="w3-input w3-border w3-round" type="text" placeholder="District" value="${item.District}" readonly>
+                  </div>
+                  <div class="w3-third w3-section">
+                    <label>State</label>
+                    <input class="w3-input w3-border w3-round" type="text" placeholder="State" value="${item.State}" readonly>
+                  </div>
+                  <div class="w3-third w3-section">
+                    <label>Pincode</label>
+                    <input class="w3-input w3-border w3-round" type="text" placeholder="Pincode" value="${item.Pincode}" readonly>
+                  </div>
+                  <div class="w3-third w3-section">
+                    <label>Country</label>
+                    <input class="w3-input w3-border w3-round" type="text" placeholder="Country" value="${item.Country}" readonly>
+                  </div>
+                </div>
+            `
+              }
+            });
+          } else {
+            parent.innerHTML = `
+              <div class="w3-container w3-center">
+                <h2>No Data Found</h2>
+              </div>
+            `
+          }
+        });
+      } else {
+        parent.innerHTML = `
+          <div class="w3-container w3-center">
+              <h2>Invalid Pincode</h2>
+            </div>
+        `
+      }
+    }
+  }
+
+</script>
+
+</html>
