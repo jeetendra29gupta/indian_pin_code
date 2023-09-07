@@ -52,7 +52,7 @@
             let post_api_value = item.PostOffice;
             post_api_value.forEach(function (item, index) {
               if (item.DeliveryStatus === "Delivery") {
-                parent.innerHTML += `
+                parent.innerHTML = `
                 <div class="w3-row-padding">
                   <div class="w3-half w3-section">
                     <label>City Name</label>
